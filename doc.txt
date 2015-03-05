@@ -1,0 +1,138 @@
+## math equivalence
+
+# Marking
+
+I think our algorithim would work this way. It would look at the each line of the students input and try to match it to a teacher input. If it matches he gets the point. There are no points deducted for additional steps even if their wrong. If he misses a step he gets points deducted.
+
+# Checking equivalence, two approaches
+
+Theres two ends to consider, the person inputting the proof(teacher) and the person inputting his solution(student). 
+
+The first way is that the teacher just inputs the steps and our code magically makes sure that all valid solutions are marked correct. This would be great, but might be very hard to implement perfectly.
+
+The other is where as the teacher inputs code, we automatically generate equivalent steps, and the teacher can choose which one he wants. I imagine also some of it could be automated so the following is always true
+
+5 -  1 == - 1 + 5
+2 * 7 == 7 * 2
+a + b == b + a
+5 * 1/3 = 5/3
+
+but
+
+"x = (3 + b)(2 + a)" == "x = 6 + 2b + 3a + ab"
+
+so the teacher could decided if this was true or not.
+
+#linear algebra
+
+we also have to look at all the differeant ways to solve something like simultaneous equations.
+
+x + y + 3z = 5
+x + -y + z = 5
+
+We could have if (valid step results in a variable == 0 ) award point. 
+
+# input formating
+
+I'v been thinking in order to process to raw input, should we give everything paranthesis, so we don't have to worry about operator predence.
+
+for example
+
+a + 3x becomes ( a + (3x) )
+-3^x+4*5  -> ((-(3^x)) + (4*5))
+
+this might lead to us being able to right a recusive function to check equivalence. I could probably write this piece of code, call it 
+addParen or something. Good to get my feet wet in javascript
+
+Alternatively we could also consider reverse polish notation, although we might end up hating ourselves for it.
+
+I imagine we are going to process everything as strings, although we could use arrays maybe, might make coding easier.
+
+# Automated checking
+
+We should automatically check if a statement is true. For example is 1 + 1 == 3 returns wrong (this feature won't be present in elementary school problems I guess)
+
+# Another equivalence problem
+
+3x = 3
+x = 1
+
+is the same as
+
+3x = 3
+3x/3 = 3/3
+x = 1
+
+We could make people declare
+3x = 3
+div 3
+x = 1
+
+## Additional features
+
+# Type of statement
+
+We could also illustrate what type of statement it is. 
+x = 4 //declaritive
+x + 1 = 5 // 
+
+
+# Machine learning
+
+Although not really machine learning, but we could probably improve our algorithim by storing input from students, especially if their method gives a valid answer. Also we could present it to the teacher to check if valid method. 
+
+
+## Questions needed answering
+
+Questions need answering with my current best guess.
+
+What does the raw input look like? 
+string, input same from grapher thing
+
+What does it look like after we process it?
+string or array with parenthisis around every operation. I'm thinking arrays would be better.
+
+How do we check equivalence?
+we generate all equivalent statements and see if there is a match. 
+
+How do we do the last step efficently?
+I don't know, probably some tree thing.
+
+## Todo
+
+I think we should try to create something that works
+
+Either we create a simple elementary operations checker for like toddlers.
+
+4 + 4?
+= 8
+"SUCCESS"
+
+or we try to implement associtivity and commutaivity
+
+"a + b + c" == "c + a + b"
+a/4 != 4/a
+4/a*5 == 4*5/a
+
+we can do this using in
+exp1 = [a, +, b, +, c] // imagine all the comma stuff are char
+exp2 = [c, +, a, +, b]
+for x in exp1:
+    exp3 = ex2[:] // real copy
+    if x in exp3:
+        exp3.remove(x) // not sure if this is right code
+    else:
+        return false
+if len(exp3) == 0;
+    return true
+
+// alternative maybe faster code
+
+a = ex3.indexOf(x)
+if a == -1 // not sure if right
+    return false
+else x.pop(a) // i forgot how to remove by index
+
+tell me if you think this is good, and whether I should start implementing addParen in js. I honestly might first implement it in python and then just translate it. 
+
+
