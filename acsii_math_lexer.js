@@ -35,7 +35,6 @@ var everything =
     ')': 'RIGHT_PAREN',
     '}': 'RIGHT_CURLY',
     ']': 'RIGHT_BRACKET',
-    '\n': 'NEW_LINE',
     ',': "COMMA",
     ';': "NEW_LINE",
     '|': "ABSOLUTE",
@@ -174,15 +173,24 @@ var right_brackets =
 
 var white_space =
 {
-    '\n': 'NEW_LINE',
     '\t': 'BLANK',
     ' ': 'BLANK',
 }
 
+white_space_keys = Object.keys(white_space);
+console.log(white_space);
+
+var new_line = 
+{
+    '\n': 'NEW_LINE',
+    ';': "NEW_LINE",
+}
+
+var new_line_keys = ['\n', ';'];
+
 var delimiters =
 {
     ',': "COMMA",
-    ';': "NEW_LINE",
     '\"': "QUOTE",
     '|': "ABSOLUTE"
 }
@@ -212,6 +220,7 @@ var INT = "INT";
 var FLOAT = "FLOAT";
 var STRING = "STRING";
 var VAR = "VARIABLE";
+var BLANK = "BLANK";
 
 
 var greek_letters = 
@@ -289,7 +298,7 @@ keywords = keywords.concat(Object.keys(assignment));
 keywords = keywords.concat(Object.keys(relation_symbols));
 keywords = keywords.concat(Object.keys(left_brackets));
 keywords = keywords.concat(Object.keys(right_brackets));
-keywords = keywords.concat(Object.keys(white_space));
+// keywords = keywords.concat(Object.keys(white_space));
 keywords = keywords.concat(Object.keys(delimiters));
 keywords = keywords.concat(Object.keys(big_func));
 keywords = keywords.concat(Object.keys(big_operators));
@@ -356,24 +365,28 @@ function isKeyword(math_input, cur_i)
     var found = false
     for (var i = keywords_nest.length - 1; i >= 0;i = nextInArray(keywords_nest, i)) 
     {
-        // console.log("i: " + i)
+        while (cur_i + keywords_nest[i][0].length > math_input.length)
+        {
+            i = nextInArray(keywords_nest, i);
+        }
         for (var j = 0; j < keywords_nest[i].length; j++ )
         {
-            console.log("i: " + i + "\t j: " + j)
             for (var k = 0; k < keywords_nest[i][j].length; k++) 
             {
                 found = true;
-                if ( cur_i + k == math_input.length || keywords_nest[i][j].charAt(k) != math_input.charAt(cur_i+k))
+                if (keywords_nest[i][j].charAt(k) != math_input.charAt(cur_i+k))
                 {
+                    console.log("helo");
                     found = false;
                     break;
                 }
             }
             if (found)
+            {
                 return [true, keywords_nest[i][j], k];
+            }
         }
     }
-    console.log("C");
     return [false];
 }
 
@@ -432,13 +445,27 @@ function tokenize(math_input)
             console.log(key)
             input_tokens.push(everything[key[1]]);
             input_split.push(key[1]);
-            i += key[2];
+            i += key[2] + 1;
         }
         else if ( isAlphabet(start_of_token) )
         {
             input_tokens.push(VAR);
             input_split.push(start_of_token);
             i++;
+        }
+        else if ( white_space_keys.contains(start_of_token) )
+        {
+            input_tokens.push("BLANK");
+            input_split.push(" ");
+            while ( white_space_keys.contains(math_input.charAt(++i)))
+                ;
+        }
+        else if ( new_line_keys.contains(start_of_token) )
+        {
+            input_tokens.push("NEW_LINE");
+            input_split.push(";");
+            while ( new_line_keys.contains(math_input.charAt(++i)))
+                ;
         }
         else
             i++;
@@ -459,10 +486,10 @@ function tokenize(math_input)
 
 
 
-
 // console.log(keywords);
 // console.log(tokenize("12341123411\"asdfasdfasdf\""))
-console.log(tokenize("alphaxxalphe+!= 123 +a 123.123123 / frac 100"))
+// console.log(tokenize("alphaxxalphe+!= 123 +a 123.123123 / frac 100"))
+console.log(tokenize(" alph a1lpha ;;\n alph a"));
 // console.log(make_keywords_nested(keywords));
 
 // isKeyword("asdf", 0);
